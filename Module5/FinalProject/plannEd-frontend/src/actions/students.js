@@ -418,3 +418,29 @@ export function submitCourseColor() {
     type: "SUBMIT_COURSE_COLOR"
   }
 }
+
+export function selectStudentCourse(studentCourseId) {
+  return {
+    type: "SELECT_STUDENT_COURSE",
+    payload: studentCourseId
+  }
+}
+
+export function deselectStudentCourse() {
+  return {
+    type: "DESELECT_STUDENT_COURSE"
+  }
+}
+
+export function showStudentCourseDetails(studentCourseId) {
+  return {
+    type: "SHOW_STUDENT_COURSE_DETAILS",
+    payload: studentCourseId
+  }
+}
+
+export function hideStudentCourseDetails() {
+  return {
+    type: "HIDE_STUDENT_COURSE_DETAILS"
+  }
+}

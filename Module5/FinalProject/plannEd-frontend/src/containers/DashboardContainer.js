@@ -71,8 +71,6 @@ class DashboardContainer extends Component {
   };
 };
 
-        // {this.props.student.id ? <AssignmentContainer /> : <Redirect to="/"/>}
-
 
 
 function mapStateToProps(state) {

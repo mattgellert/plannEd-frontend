@@ -4,8 +4,13 @@ import CourseCard from './CourseCard';
 class CourseList extends Component {
   render() {
     const selectedStudentCourse = this.props.selectedStudentCourse;
+    const onSelectStudentCourse = this.props.onSelectStudentCourse;
+    const onDeselectStudentCourse = this.props.onDeselectStudentCourse;
+    const onShowStudentCourseDetails = this.props.onShowStudentCourseDetails;
+    const onHideStudentCourseDetails = this.props.onHideStudentCourseDetails;
+
     const courses = this.props.courses.map(course => {
-      <CourseCard course={course} selectedStudentCourse={selectedStudentCourse}/>
+      return <CourseCard course={course} selectedStudentCourse={selectedStudentCourse} onSelectStudentCourse={onSelectStudentCourse} onDeselectStudentCourse={onDeselectStudentCourse} onShowStudentCourseDetails={onShowStudentCourseDetails} onHideStudentCourseDetails={onHideStudentCourseDetails}/>
     });
 
     return(

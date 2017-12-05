@@ -144,6 +144,10 @@ export default function studentReducer(
           courseColor: null,
           colorSelected: null
         },
+        selectedStudentCourse: {
+          data: null,
+          showDetails: false
+        },
         selectedForTodo: 0,
         selectedAssignment: {
           id: [],
@@ -740,6 +744,38 @@ export default function studentReducer(
         calendarClick: {
           x: action.payload.x,
           y: action.payload.y
+        }
+      }
+    case "SELECT_STUDENT_COURSE":
+      return {
+        ...state,
+        selectedStudentCourse: {
+          data: action.payload,
+          showDetails: false
+        }
+      }
+    case "DESELECT_STUDENT_COURSE":
+      return {
+        ...state,
+        selectedStudentCourse: {
+          data: null,
+          showDetails: false
+        }
+      }
+    case "SHOW_STUDENT_COURSE_DETAILS":
+      return {
+        ...state,
+        selectedStudentCourse: {
+          ...state.selectedStudentCourse,
+          showDetails: action.payload
+        }
+      }
+    case "HIDE_STUDENT_COURSE_DETAILS":
+      return {
+        ...state,
+        selectedStudentCourse: {
+          data: null,
+          showDetails: false
         }
       }
     default:
