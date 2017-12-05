@@ -9,8 +9,7 @@ class DirectoryCourseCard extends Component {
   handleAddCourse = (event) => {
     const studentCourse = this.studentCourseCreator();
     const instructors = this.props.selectedCourse[`selected${this.props.selectedCourse.data.enrollGroups[0].componentsRequired[0]}`].instructors; //pull out intstructors
-    this.props.onAddCourse(this.props.student, studentCourse, instructors, this.props.selectedCourse.courseColor);
-    this.props.history.push("/dashboard");
+    this.props.onAddCourse(this.props.student, studentCourse, instructors, this.props.selectedCourse.courseColor, this.props.history);
   };
 
   studentCourseCreator = () => {
@@ -139,8 +138,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onAddCourse: (student, studentCourse, instructors, color) => {
-      dispatch(addCourse(student, studentCourse, instructors, color));
+    onAddCourse: (student, studentCourse, instructors, color, history) => {
+      dispatch(addCourse(student, studentCourse, instructors, color, history));
     },
     onSelectCourse: (course) => {
       dispatch(selectDirectoryCourse(course));

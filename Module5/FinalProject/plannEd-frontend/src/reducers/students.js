@@ -45,8 +45,10 @@ export default function studentReducer(
     },
     selectedStudentCourse: {
       data: null,
-      showDetails: false
+      showDetails: false,
+      selectedComponent: null
     },
+    courseToRemove: null,
     selectedForToDo: 0,
     slotSelected: false,
     selectedSlot: {
@@ -148,8 +150,10 @@ export default function studentReducer(
         },
         selectedStudentCourse: {
           data: null,
-          showDetails: false
+          showDetails: false,
+          selectedComponent: null
         },
+        courseToRemove: null,
         selectedForTodo: 0,
         selectedAssignment: {
           id: [],
@@ -866,7 +870,8 @@ export default function studentReducer(
         ...state,
         selectedStudentCourse: {
           data: null,
-          showDetails: false
+          showDetails: false,
+          selectedComponent: null
         }
       }
     case "SHOW_STUDENT_COURSE_DETAILS":
@@ -881,10 +886,45 @@ export default function studentReducer(
       return {
         ...state,
         selectedStudentCourse: {
-          data: null,
-          showDetails: false
+          ...state.selectedStudentCourse,
+          showDetails: false,
+          seletedComponent: null
         }
       }
+    case "SELECT_REMOVE_COURSE":
+      return {
+        ...state,
+        courseToRemove: action.payload
+      }
+    case "DESELECT_REMOVE_COURSE":
+      return {
+        ...state,
+        courseToRemove: null
+      }
+    case "UPDATED_COURSES":
+      debugger
+      return {
+        ...state,
+        studentCourses: action.payload,
+        loading: false
+      }
+      //REFACTOR TO USE FOR SELECTING WHEN CREATING COMPONENT TO DO
+    // case "SHOW_STUDENT_COMP_DETAILS":
+    //   return {
+    //     ...state,
+    //     selectedStudentCourse: {
+    //       ...state.seletedStudentCourse,
+    //       selectedComponent: action.payload
+    //     }
+    //   }
+    // case "HIDE_STUDENT_COMP_DETAILS":
+    //   return {
+    //     ...state,
+    //     selectedStudentCourse: {
+    //       ...state.selectedStudentCourse,
+    //       selectedComponent: null
+    //     }
+    //   }
     default:
       return state;
   }

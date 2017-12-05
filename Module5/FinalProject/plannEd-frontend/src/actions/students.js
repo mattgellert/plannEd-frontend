@@ -79,7 +79,7 @@ export function signOutUser() {
   return { type: "SIGN_OUT"};
 };
 
-export function addCourse(student, studentCourse, instructors, color) {
+export function addCourse(student, studentCourse, instructors, color, history) {
   return (dispatch) => {
     dispatch({ type: 'LOADING'});
     return fetch(`http://localhost:3000/api/v1/students/add_student_course`, {
@@ -96,6 +96,7 @@ export function addCourse(student, studentCourse, instructors, color) {
         dispatch({ type: 'ADD_COURSE_TIME_CONFLICT', payload: data.error });
       } else {
         dispatch({ type: 'ADDED_COURSE', payload: { studentCourse: data.studentCourse, studentAssignments: data.studentAssignments, dueDates: data.dueDates, courseDates: data.courseDates }})
+        history.push("/dashboard");
         dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
       }
     });
@@ -224,25 +225,6 @@ export function completeParent(studentAssignmentId) {
       })
   }
 }
-
-export function submitDeleteToDoOnComplete(toDos, keep) {
-  return (dispatch) => {
-    dispatch({ type: "LOADING" });
-    return fetch("http://localhost:3000/api/v1/students/delete_to_do_on_complete", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-      },
-      body: JSON.stringify({ toDos, keep })
-    })
-      .then(resp => resp.json())
-      .then(json => {
-        dispatch({ type: "UPDATED_TO_DO", payload: json })
-        dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" });
-      });
-  };
-};
 
 export function showAssignmentDetails(studentAssignmentId) {
   return {
@@ -463,5 +445,52 @@ export function showStudentCourseDetails(studentCourseId) {
 export function hideStudentCourseDetails() {
   return {
     type: "HIDE_STUDENT_COURSE_DETAILS"
+  }
+}
+
+export function showStudentCompDetails(studentCompId) {
+  return {
+    type: "SHOW_STUDENT_COMP_DETAILS",
+    payload: studentCompId
+  }
+}
+
+export function hideStudentCompDetails() {
+  return {
+    type: "HIDE_STUDENT_COMP_DETAILS"
+  }
+}
+
+export function selectRemoveCourse(studentCourseId) {
+  console.log("select remove course")
+  return {
+    type: "SELECT_REMOVE_COURSE",
+    payload: studentCourseId
+  }
+}
+
+export function deselectRemoveCourse(studentCourseId) {
+  console.log("deselect remove course")
+  return {
+    type: "DESELECT_REMOVE_COURSE"
+  }
+}
+
+export function removeCourse(studentCourseId) {
+  return (dispatch) => {
+    dispatch({ type: "LOADING" })
+    //post studentCourseId --> remove all associated objects
+    fetch("http://localhost:3000/api/v1/students/remove_course", {
+      method: "delete",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({ studentCourseId })
+    })
+      .then(resp => resp.json())
+      .then(json => {
+        dispatch({ type: "UPDATED_COURSES", payload: json.studentCourses })
+      });
   }
 }
