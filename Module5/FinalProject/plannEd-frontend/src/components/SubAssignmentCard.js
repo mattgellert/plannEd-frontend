@@ -14,7 +14,6 @@ export default class SubAssignmentCard extends Component {
 
   handleSubAssignments = () => {
     this.props.onFetchSubAssignments(this.props.assignment.studentAssignmentId);
-    //dont forget to edit FetchSubAssignments reducer case s.t. it formats selectedAssignment.id properly
   };
 
   handleDeselectSubAssignment = () => {
@@ -26,24 +25,43 @@ export default class SubAssignmentCard extends Component {
     this.props.selectedForToDo === this.props.assignment.studentAssignmentId ? this.props.onDeselectForToDo() : this.props.onSelectForToDo(this.props.assignment.studentAssignmentId);
   };
 
+  handleShowAssignmentDetails = () => {
+    this.props.onShowAssignmentDetails(this.props.assignment.studentAssignmentId);
+  }
+
+  handleHideAssignmentDetails = () => {
+    this.props.onHideAssignmentDetails();
+  };
+
   render() {
     let show = false;
+    const assignment = this.props.assignment;
     this.props.selectedAssignment.subAssignments.forEach(subAss => {
-      if (subAss.parentId === this.props.assignment.studentAssignmentId) {
+      if (subAss.parentId === assignment.studentAssignmentId) {
         show = true;
-      }
+      };
     });
-    console.log("sub assignment render")
+    const dueDate = new Date(assignment.dueDate);
     return (
       <div className="sub-assignment-card">
-        <h2>{this.props.assignment.title}</h2>
-        <p>{this.props.assignment.dueDate}</p>
-        <p>{this.props.assignment.description}</p>
-        <button onClick={this.handleAddToDo}>{this.props.selectedForToDo === this.props.assignment.studentAssignmentId ? "Choose A Date >" : "+ To Do"}</button>
-        {this.props.assignment.hasSubAssignments
+        <h3>{assignment.subject} {assignment.catalogNbr} HW</h3>
+        <p>{assignment.courseTitle}</p>
+        <p>{assignment.title}</p>
+        <p>Due: {dueDate.toLocaleString()}</p>
+        {this.props.selectedAssignment.showDetails === assignment.studentAssignmentId
           ?
             <div>
-              <button onClick={this.handleParentComplete}>{this.props.assignment.completed ? "Completed!" : "Complete Sub-Assignments"}</button>
+              <button onClick={this.handleHideAssignmentDetails}>Hide Details</button>
+              <p>{assignment.description}</p>
+            </div>
+          :
+            <button onClick={this.handleShowAssignmentDetails}>Show Details</button>
+        }
+        <button onClick={this.handleAddToDo}>{this.props.selectedForToDo === assignment.studentAssignmentId ? "Choose A Date >" : "+ To Do"}</button>
+        {assignment.hasSubAssignments
+          ?
+            <div>
+              <button onClick={this.handleParentComplete}>{assignment.completed ? "Completed!" : "Complete Sub-Assignments"}</button>
               {show
                 ?
                   <button onClick={this.handleDeselectSubAssignment}>Hide Sub-Assignments</button>
@@ -53,7 +71,7 @@ export default class SubAssignmentCard extends Component {
             </div>
           :
             <div>
-              <button onClick={this.handleComplete}>{this.props.assignment.completed ? "Completed!" : "Complete"}</button>
+              <button onClick={this.handleComplete}>{assignment.completed ? "Completed!" : "Complete"}</button>
             </div>
         }
       </div>

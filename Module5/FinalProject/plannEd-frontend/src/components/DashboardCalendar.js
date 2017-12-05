@@ -17,13 +17,26 @@ export default class DashboardCalendar extends Component {
 
   getEventColor = (event) => {
     const color = event.color;
-    console.log("get event color")
-    console.log("course filter", this.props.courseFilter, "event parent", event.parentId)
-    if (parseInt(this.props.courseFilter) === event.parentId) {
-      console.log("hit")
-      return { style: { backgroundColor: color, border: color, opacity: 0.5 } }
+    console.log("event color:", color)
+    const completedFilter = this.props.completedFilter;
+    if (this.props.courseFilter === "All Courses" || parseInt(this.props.courseFilter) === event.parentId) {
+      if (completedFilter === "Incomplete") {
+        console.log("event type:", event.eventType, "completed:", event.completed)
+        return (event.eventType === "due date") && !event.completed ? { style: { backgroundColor: color, border: "2px solid #000000" } } : { style: { backgroundColor: color } };
+      } else {
+        // debugger
+        console.log("event type:", event.eventType, "completed:", event.completed)
+        return (event.eventType === "due date") && !!event.completed ? { style: { backgroundColor: color, border: "2px solid #000000" } } : { style: { backgroundColor: color } };
+      };
+
     } else {
-      return { style: { backgroundColor: color, border: color } }
+
+      if (completedFilter === "Incomplete") {
+        return (event.eventType === "due date") && !event.completed ? { style: { backgroundColor: color, border: "2px solid #000000", opacity: 0.5 } } : { style: { backgroundColor: color, opacity: 0.5 } };
+      } else {
+        return (event.eventType === "due date") && !!event.completed ? { style: { backgroundColor: color, border: "2px solid #000000", opacity: 0.5 } } : { style: { backgroundColor: color, opacity: 0.5 } };
+      };
+
     }
   };
 
@@ -36,7 +49,8 @@ export default class DashboardCalendar extends Component {
       startDate: new Date(...date.startDate),
       endDate: new Date(...date.endDate),
       color: date.color,
-      parentId: date.parentId
+      parentId: date.parentId,
+      completed: date.completed
     }));
     console.log("calendar render")
     // ["month", "week", "work_week", "day", "agenda"]

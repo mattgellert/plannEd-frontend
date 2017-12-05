@@ -57,7 +57,7 @@ export default function studentReducer(
     selectedAssignment: {
       id: [],
       subAssignments: [],
-      firstChild: true
+      showDetails: null
     },
     loading: false
   }, action) {
@@ -144,7 +144,7 @@ export default function studentReducer(
         selectedAssignment: {
           id: [],
           subAssignments: [],
-          firstChild: true
+          showDetails: null
         },
         loading: false
       };
@@ -377,22 +377,45 @@ export default function studentReducer(
           subAssignments: subAssignmentsWithCompletedParent
         }
       }
-    case "SELECT_ASSIGNMENT":
+    case "SHOW_ASSIGNMENT_DETAILS":
+      console.log("show assignment details, state", state)
+      const assignmentToShowId = action.payload;
+      const totalSelectedAssignmentIds = state.selectedAssignment.subAssignments.map(subAss => subAss.id);
+      if (totalSelectedAssignmentIds.includes(assignmentToShowId)) {
+        console.log("selected assignment ids includes assignment id to show")
+        return {
+          ...state,
+          selectedAssignment: {
+            ...state.selectedAssignment,
+            showDetails: assignmentToShowId
+          }
+        }
+      } else {
+        return {
+          ...state,
+          selectedAssignment: {
+            subAssignments: [],
+            showDetails: assignmentToShowId,
+            id: []
+          }
+        }
+      };
+    case "HIDE_ASSIGNMENT_DETAILS":
+    console.log("hide details, state:", state)
       return {
         ...state,
         selectedAssignment: {
-          subAssignments: [],
-          firstChild: true,
-          id: [action.payload]
+          ...state.selectedAssignment,
+          showDetails: null
         }
-      };
+      }
     case "DESELECT_ASSIGNMENT":
       return {
         ...state,
         selectedAssignment: {
-          id: [],
+          ...state.selectedAssignment,
           subAssignments: [],
-          firstChild: true
+          id: []
         }
       }
     case "DESELECT_SUB_ASSIGNMENT":
@@ -548,7 +571,7 @@ export default function studentReducer(
           selectedAssignment: {
             id: [],
             subAssignments: [],
-            firstChild: true
+            showDetails: null
           }
         }
       } else {

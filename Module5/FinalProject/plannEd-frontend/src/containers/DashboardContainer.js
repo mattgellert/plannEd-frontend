@@ -61,7 +61,7 @@ class DashboardContainer extends Component {
         {this.props.student.id
           ?
             <div className="dashboard-calendar-wrapper">
-              <DashboardCalendar courseFilter={this.props.courseFilter} defaultDate={this.props.defaultDate} onCalendarClick={this.props.onCalendarClick} calendar={this.props.calendar} {...calProps}/>
+              <DashboardCalendar completedFilter={this.props.completedFilter} courseFilter={this.props.courseFilter} defaultDate={this.props.defaultDate} onCalendarClick={this.props.onCalendarClick} calendar={this.props.calendar} {...calProps}/>
             </div>
           :
             <Redirect to="/"/>
@@ -86,7 +86,8 @@ function mapStateToProps(state) {
     selectedForToDo: state.selectedForToDo,
     calendarClick: state.calendarClick,
     defaultDate: state.calendar.defaultDate,
-    courseFilter: state.studentAssignments.courseFilter
+    courseFilter: state.studentAssignments.courseFilter,
+    completedFilter: state.studentAssignments.completedFilter
   }
 };
 

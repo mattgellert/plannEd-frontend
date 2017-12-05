@@ -223,20 +223,28 @@ export function completeParent(studentAssignmentId) {
   }
 }
 
-export function selectAssignment(studentAssignmentId) {
+export function showAssignmentDetails(studentAssignmentId) {
   return {
-    type: "SELECT_ASSIGNMENT",
+    type: "SHOW_ASSIGNMENT_DETAILS",
     payload: studentAssignmentId
   }
 };
 
+export function hideAssignmentDetails() {
+  return {
+    type: "HIDE_ASSIGNMENT_DETAILS"
+  }
+}
+
 export function deselectAssignment() {
+  console.log("deselect assignment")
   return {
     type: "DESELECT_ASSIGNMENT"
   }
 };
 
 export function deselectSubAssignment(studentAssignmentId) {
+  console.log("deselect sub assignment:", studentAssignmentId)
   return {
     type: "DESELECT_SUB_ASSIGNMENT",
     payload: studentAssignmentId

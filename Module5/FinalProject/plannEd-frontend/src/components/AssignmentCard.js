@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import SubAssignmentCard from './SubAssignmentCard';
-import { deselectForToDo, selectForToDo, completeParent, fetchSubAssignments, completeAssignment, completeSubAssignment, selectAssignment, deselectAssignment, deselectSubAssignment } from '../actions/students';
+import { hideAssignmentDetails, deselectForToDo, selectForToDo, completeParent, fetchSubAssignments, completeAssignment, completeSubAssignment, showAssignmentDetails, deselectAssignment, deselectSubAssignment } from '../actions/students';
 // import PriorityIcon from './svgs/PriorityIcon.js';
 
 
@@ -15,7 +15,15 @@ class AssignmentCard extends Component {
     this.props.onCompleteAssignment(this.props.assignment.studentAssignmentId);
   };
 
-  handleSelectAssignment = () => {
+  handleShowAssignmentDetails = () => {
+    this.props.onShowAssignmentDetails(this.props.assignment.studentAssignmentId);
+  };
+
+  handleHideAssignmentDetails = () => {
+    this.props.onHideAssignmentDetails();
+  };
+
+  handleSelectSubAssignments = () => {
     this.props.onFetchSubAssignments(this.props.assignment.studentAssignmentId, true)
   };
 
@@ -25,7 +33,7 @@ class AssignmentCard extends Component {
 
   showSubAssignments = () => {
     const arr = this.props.selectedAssignment.subAssignments.map((subAss, idx) => {
-      return <SubAssignmentCard key={subAss.studentAssignmentId} onDeselectForToDo={this.props.onDeselectForToDo} selectedForToDo={this.props.selectedForToDo} assignment={subAss.assignment} onCompleteParent={this.props.onCompleteParent} onCompleteSubAssignment={this.props.onCompleteSubAssignment} onFetchSubAssignments={this.props.onFetchSubAssignments} onDeselectSubAssignment={this.props.onDeselectSubAssignment} onSelectForToDo={this.props.onSelectForToDo} selectedAssignment={this.props.selectedAssignment} studentAssignments={this.props.studentAssignments}/>
+      return <SubAssignmentCard key={subAss.studentAssignmentId} onShowAssignmentDetails={this.props.onShowAssignmentDetails} onHideAssignmentDetails={this.props.onHideAssignmentDetails} onDeselectForToDo={this.props.onDeselectForToDo} selectedForToDo={this.props.selectedForToDo} assignment={subAss.assignment} onCompleteParent={this.props.onCompleteParent} onCompleteSubAssignment={this.props.onCompleteSubAssignment} onFetchSubAssignments={this.props.onFetchSubAssignments} onDeselectSubAssignment={this.props.onDeselectSubAssignment} onSelectForToDo={this.props.onSelectForToDo} selectedAssignment={this.props.selectedAssignment} studentAssignments={this.props.studentAssignments}/>
     });
     return arr;
   };
@@ -36,18 +44,30 @@ class AssignmentCard extends Component {
   };
 
   render() {
-
+    const assignment = this.props.assignment;
+    const selectedAssignment = this.props.selectedAssignment;
+    const dueDate = new Date(assignment.dueDate);
     return (
       <div>
-        <h2>{this.props.assignment.title}</h2>
-        <p>{this.props.assignment.dueDate}</p>
-        <p>{this.props.assignment.description}</p>
-        <button onClick={this.handleAddToDo}>{this.props.selectedForToDo === this.props.assignment.studentAssignmentId ? "Choose A Date >" : "+ To Do"}</button>
-        {this.props.assignment.hasSubAssignments
+        <h3>{assignment.subject} {assignment.catalogNbr} HW</h3>
+        <p>{assignment.courseTitle}</p>
+        <p>{assignment.title}</p>
+        <p>Due: {dueDate.toLocaleString()}</p>
+        {selectedAssignment.showDetails === assignment.studentAssignmentId
           ?
             <div>
-              <button onClick={this.handleParentComplete}>{this.props.assignment.completed ? "Completed!" : "Complete Sub-Assignments"}</button>
-              {(this.props.selectedAssignment.id.length > 0 && this.props.selectedAssignment.id[0][0] === this.props.assignment.studentAssignmentId)
+              <button onClick={this.handleHideAssignmentDetails}>Hide Details</button>
+              <p>{assignment.description}</p>
+            </div>
+          :
+            <button onClick={this.handleShowAssignmentDetails}>Show Details</button>
+        }
+        <button onClick={this.handleAddToDo}>{this.props.selectedForToDo === assignment.studentAssignmentId ? "Choose A Date >" : "+ To Do"}</button>
+        {assignment.hasSubAssignments
+          ?
+            <div>
+              <button onClick={this.handleParentComplete}>{assignment.completed ? "Completed!" : "Complete Sub-Assignments"}</button>
+              {(this.props.selectedAssignment.id.length > 0 && this.props.selectedAssignment.id[0][0] === assignment.studentAssignmentId)
                 ?
                   <div>
                     <button onClick={this.handleDeselectAssignment}>Hide Sub-Assignments</button>
@@ -55,12 +75,12 @@ class AssignmentCard extends Component {
                   </div>
                 :
                   <div>
-                    <button onClick={this.handleSelectAssignment}>See Sub-Assignments</button>
+                    <button onClick={this.handleSelectSubAssignments}>See Sub-Assignments</button>
                   </div>
               }
             </div>
           :
-            <button onClick={this.handleComplete}>{this.props.assignment.completed ? "Completed!" : "Complete"}</button>
+            <button onClick={this.handleComplete}>{assignment.completed ? "Completed!" : "Complete"}</button>
         }
       </div>
     );
@@ -88,9 +108,6 @@ function mapDispatchToProps(dispatch) {
     onCompleteParent: (studentAssignmentId) => {
       dispatch(completeParent(studentAssignmentId));
     },
-    onSelectAssignment: (studentAssignmentId) => {
-      dispatch(selectAssignment(studentAssignmentId));
-    },
     onDeselectAssignment: () => {
       dispatch(deselectAssignment());
     },
@@ -105,6 +122,12 @@ function mapDispatchToProps(dispatch) {
     },
     onDeselectForToDo: () => {
       dispatch(deselectForToDo());
+    },
+    onShowAssignmentDetails: (studentAssignmentId) => {
+      dispatch(showAssignmentDetails(studentAssignmentId));
+    },
+    onHideAssignmentDetails: () => {
+      dispatch(hideAssignmentDetails());
     }
   }
 };
