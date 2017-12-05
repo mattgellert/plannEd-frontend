@@ -3,7 +3,6 @@ import { NavLink } from 'react-router-dom';
 import './NavBar.css';
 import { connect } from 'react-redux';
 import { signOutUser } from '../actions/students';
-import AssignmentContainer from '../containers/AssignmentContainer';
 import generateKeyFrames from './helpers/generateKeyFrames';
 import DashboardIcon from './svgs/DashboardIcon';
 
@@ -36,6 +35,7 @@ class NavBar extends Component {
    }
 
   handleSignOut = () => {
+    this.setPrevTab();
     this.props.onSignOut();
   };
 
@@ -62,7 +62,7 @@ class NavBar extends Component {
           <li className="navlink">
             <NavLink className="link home" to="/" exact>
               <div className="logo">
-                <img className="logo-img" src="../cornell.png"></img>
+                <img className="logo-img" src="../cornell.png" alt=""></img>
               </div>
             </NavLink>
           </li>
@@ -77,7 +77,7 @@ class NavBar extends Component {
                 </NavLink>
               </li>
               <li onClick={this.setPrevTab} className={`navlink ${directoryActiveClass}`}><NavLink activeClassName="active" className="link" to="/course-directory" exact>Course Directory</NavLink></li>
-              <li onClick={this.setPrevTab} className="navlink" onClick={this.handleSignOut}><NavLink className="link sign-out" to="/" exact>Sign Out</NavLink></li>
+              <li className="navlink" onClick={this.handleSignOut}><NavLink className="link sign-out" to="/" exact>Sign Out</NavLink></li>
               <li onClick={this.setPrevTab} className="navlink" ><NavLink className="link my-courses" to="/my-courses" exact>My Courses</NavLink></li>
             </div>
             :

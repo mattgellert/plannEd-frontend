@@ -31,6 +31,7 @@ export default function studentReducer(
       limitEnd: null,
       display: []
     },
+    showDeleteCompletedToDos: false,
     selectedSemester: "",
     selectedSubject: "",
     selectedCourse: {
@@ -133,6 +134,7 @@ export default function studentReducer(
           limit: null,
           display: []
         },
+        showDeleteCompletedToDos: false,
         selectedSemester: "",
         selectedSubject: "",
         selectedCourse: {
@@ -198,7 +200,7 @@ export default function studentReducer(
         loading: false
       };
     case "FETCHED_ASSIGNMENTS":
-      console.log('fetched_assignments payload:', action.payload)
+
       const fetchedAssignments = action.payload.studentAssignments;
       const fetchedDueDates = action.payload.dueDates;
       const fetchedCourseDates = action.payload.courseDates;
@@ -290,18 +292,49 @@ export default function studentReducer(
         ...state,
         selectedSubject: action.payload
       };
-    case "COMPLETED_ASSIGNMENT": ///will need work so you can complete mid-filter
+    case "COMPLETED_ASSIGNMENT":
       const dataWithCompletedAssignment = state.studentAssignments.data.map(studentAssignment => {
-        if (studentAssignment.studentAssignmentId === action.payload.studentAssignmentId) {
+        if (studentAssignment.studentAssignmentId === action.payload.studentAssignment.studentAssignmentId) {
           return {
-            ...action.payload
+            ...action.payload.studentAssignment
           };
         } else {
           return studentAssignment
         }
       });
+
+      const updatedDueDatesFromAss = action.payload.dueDates;
+      const dueDatesWithCompletedAssignment = state.calendar.dueDates.map(date => {
+        if (updatedDueDatesFromAss.includes(date.id)) {
+          return {
+            ...date,
+            completed: !date.completed
+          }
+        } else {
+          return date
+        }
+      });
+
+      const updatedToDosFromAss = action.payload.toDos;
+      const toDosWithCompletedAssignment = state.calendar.toDoItems.map(todo => {
+        if (updatedToDosFromAss.includes(todo.id)) {
+          return {
+            ...todo,
+            completed: !todo.completed
+          }
+        } else {
+          return todo
+        }
+      });
+      debugger
+
       return {
         ...state,
+        calendar: {
+          ...state.calendar,
+          toDoItems: toDosWithCompletedAssignment,
+          dueDates: dueDatesWithCompletedAssignment
+        },
         studentAssignments: {
           ...state.studentAssignments,
           data: dataWithCompletedAssignment
@@ -312,6 +345,30 @@ export default function studentReducer(
       const rootAssignments = action.payload.rootAssignments;
       const subRootAssignments = action.payload.subAssignments;
       const ids = action.payload.ids;
+
+      const updatedDueDatesFromSub = action.payload.dueDates;
+      const dueDatesWithCompletedSubAssignment = state.calendar.dueDates.map(date => {
+        if (updatedDueDatesFromSub.includes(date.studentAssignmentId)) {
+          return {
+            ...date,
+            completed: !date.completed
+          }
+        } else {
+          return date
+        }
+      }); //DO THIS
+
+      const updatedToDosFromSub = action.payload.toDos;
+      const toDosWithCompletedSubAssignment = state.calendar.toDoItems.map(todo => {
+        if (updatedToDosFromSub.includes(todo.studentAssignmentId)) {
+          return {
+            ...todo,
+            completed: !todo.completed
+          }
+        } else {
+          return todo
+        }
+      }); //DO THIS
 
       const subAssignmentsWithComplete = state.selectedAssignment.subAssignments.map((subAss, idx) => {
         if (ids.includes(subAss.id)) {
@@ -339,6 +396,11 @@ export default function studentReducer(
       //if parent assignment is complete update parent
       return {
         ...state,
+        calendar: {
+          ...state.calendar,
+          toDoItems: toDosWithCompletedSubAssignment,
+          dueDates: dueDatesWithCompletedSubAssignment
+        },
         studentAssignments: {
           ...state.studentAssignments,
           data: rootAssignmentsWithComplete
@@ -374,8 +436,39 @@ export default function studentReducer(
           return ass
         }
       });
+
+       const updatedDueDatesFromParent = action.payload.dueDates;
+       const dueDatesWithCompletedParent = state.calendar.dueDates.map(date => {
+         if (updatedDueDatesFromParent.includes(date.studentAssignmentId)) {
+           return {
+             ...date,
+             completed: !date.completed
+           }
+         } else {
+           return date
+         }
+       }); //DO THIS
+
+
+      const updatedToDosFromParent = action.payload.toDos;
+      const toDosWithCompletedParent = state.calendar.toDoItems.map(todo => {
+        if (updatedToDosFromParent.includes(todo.studentAssignmentId)) {
+          return {
+            ...todo,
+            completed: !todo.completed
+          }
+        } else {
+          return todo
+        }
+      }); //DO THIS
+
+
       return {
         ...state,
+        calendar: {
+          ...state.calendar,
+          dueDates: dueDatesWithCompletedParent
+        },
         studentAssignments: {
           ...state.studentAssignments,
           data: rootAssignmentsWithCompletedParent
@@ -386,11 +479,11 @@ export default function studentReducer(
         }
       }
     case "SHOW_ASSIGNMENT_DETAILS":
-      console.log("show assignment details, state", state)
+
       const assignmentToShowId = action.payload;
       const totalSelectedAssignmentIds = state.selectedAssignment.subAssignments.map(subAss => subAss.id);
       if (totalSelectedAssignmentIds.includes(assignmentToShowId)) {
-        console.log("selected assignment ids includes assignment id to show")
+
         return {
           ...state,
           selectedAssignment: {
@@ -407,9 +500,23 @@ export default function studentReducer(
             id: []
           }
         }
-      };
+      }
+    case "DELETE_TO_DO_ON_COMPLETE":  //CREATE MODAL FOR THIS!!
+      return {
+        ...state,
+        showDeleteCompletedToDos: action.payload
+      }
+    case "UPDATED_TO_DO":
+      return {
+        ...state,
+        calendar: {
+          ...state.calendar,
+          toDoItems: action.payload
+        },
+        loading: false
+      }
     case "HIDE_ASSIGNMENT_DETAILS":
-    console.log("hide details, state:", state)
+
       return {
         ...state,
         selectedAssignment: {
@@ -560,9 +667,9 @@ export default function studentReducer(
       later.setDate(later.getDate() + 30);
       const limitEnd = !!state.studentAssignments.limitEnd ? state.studentAssignments.limitEnd : later;
       assignmentsDisplay = assignmentsDisplay.filter(assignment => (new Date(assignment.dueDate)) < limitEnd && (new Date(assignment.dueDate)) > limitStart);
-      console.log("limit start", limitStart)
+
       if (state.studentAssignments.prevCompletedFilter !== state.studentAssignments.completedFilter) {
-        console.log("reset selected")
+
         return {
           ...state,
           calendar: {
@@ -672,13 +779,13 @@ export default function studentReducer(
         }
       }
     case "SELECT_FOR_TO_DO":
-      console.log("selected for to do:", action.payload)
+
       return {
         ...state,
         selectedForToDo: action.payload
       }
     case "DESELECT_FOR_TO_DO":
-      console.log("reducer deselect to do")
+
       return {
         ...state,
         selectedForToDo: 0,
@@ -706,7 +813,7 @@ export default function studentReducer(
         }
       }
     case "END_CHANGE":
-      console.log("end change", action.payload)
+
       return {
         ...state,
         selectedSlot: {

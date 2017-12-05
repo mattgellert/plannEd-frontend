@@ -4,12 +4,10 @@ import { connect } from 'react-redux';
 import { fetchAssignments } from '../actions/students';
 import AssignmentSearchForm from '../components/AssignmentSearchForm';
 import AssignmentList from '../components/AssignmentList';
-import NavBar from '../components/NavBar';
 
 class AssignmentContainer extends Component {
 
   componentDidMount() {
-    console.log("assignment container CDM")
     this.props.onFetchAssignments(this.props.student.id);
   };
 

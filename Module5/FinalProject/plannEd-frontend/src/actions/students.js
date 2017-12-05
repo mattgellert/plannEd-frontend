@@ -172,7 +172,8 @@ export function completeAssignment(studentAssignmentId, isParent) { // CHECKED
       .then(resp => resp.json())
       .then(json => {
         // ..changes?
-        dispatch({ type: "COMPLETED_ASSIGNMENT", payload: json.studentAssignment })
+                                  //update "COMPLETED_ASSIGNMENT" to reflect payload
+        dispatch({ type: "COMPLETED_ASSIGNMENT", payload: { studentAssignment: json.studentAssignment, dueDates: json.dueDates, toDos: json.toDos }})
         dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
       })
   };
@@ -191,12 +192,12 @@ export function completeSubAssignment(studentAssignmentId, rootAssignmentIds, su
     })
       .then(resp => resp.json())
       .then(json => {
-
-        // ..changes?
         dispatch({ type: "COMPLETED_SUB_ASSIGNMENT", payload: {
             rootAssignments: json.rootAssignments,
             subAssignments: json.subAssignments,
-            ids: json.ids
+            ids: json.ids,
+            dueDates: json.dueDates,
+            toDos: json.toDos ///WRITE BACKEND FOR THIS
           }
         })
         dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
@@ -217,11 +218,31 @@ export function completeParent(studentAssignmentId) {
     })
       .then(resp => resp.json())
       .then(json => {
-        dispatch({ type: "COMPLETED_PARENT", payload: { ids: json.ids, completed: json.completed }})
-        dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" })
+        //response should include events to delete
+        dispatch({ type: "COMPLETED_PARENT", payload: { ids: json.ids, completed: json.completed, dueDates: json.dueDates, toDos: json.toDos }});  //WRITE BACKEND FOR THIS
+        dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" });
       })
   }
 }
+
+export function submitDeleteToDoOnComplete(toDos, keep) {
+  return (dispatch) => {
+    dispatch({ type: "LOADING" });
+    return fetch("http://localhost:3000/api/v1/students/delete_to_do_on_complete", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({ toDos, keep })
+    })
+      .then(resp => resp.json())
+      .then(json => {
+        dispatch({ type: "UPDATED_TO_DO", payload: json })
+        dispatch({ type: "CHANGE_ASSIGNMENTS_DISPLAY" });
+      });
+  };
+};
 
 export function showAssignmentDetails(studentAssignmentId) {
   return {

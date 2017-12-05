@@ -5,7 +5,6 @@ import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import './AssignmentSearchForm.css';
 import 'react-datepicker/dist/react-datepicker.css';
-import $ from 'jquery';
 
 class AssignmentSearchForm extends Component {
 
@@ -22,7 +21,6 @@ class AssignmentSearchForm extends Component {
   };
 
   handleSortDirection = (event) => {
-    console.log("sort direction change:", event.target.value)
     this.props.onSortDirection(event.target.value);
   };
 
@@ -39,38 +37,35 @@ class AssignmentSearchForm extends Component {
   };
 
   handleLimitStartChange = (event) => {
-    console.log("start limit", event._d)
     this.props.onLimitStartChange(event._d)
   };
 
   handleLimitEndChange = (event) => {
-    console.log("end limit", event._d)
     this.props.onLimitEndChange(event._d)
   };
 
 
   render() {
     const courseOptions = this.props.courses.map((course, idx) => {
-      return <option key={idx} value={course.studentCourseId}>{course.title}</option>
+      return <option key={course.studentCourseId} value={course.studentCourseId}>{course.title}</option>
     });
     const aMoment = moment();
-    
+
     return (
       <div className="assignment-form-container">
         <form className="assignment-form">
-          {console.log("completefilter", this.props.incompleteFilter)}
-          Incomplete: <input onClick={this.handleCompletedFilter} type="radio" name="complete-filter" checked={this.props.incompleteFilter ? "checked" : ""} value="Incomplete"/>
-          Completed: <input onClick={this.handleCompletedFilter} type="radio" name="complete-filter" value="Completed"/>
-          All: <input onClick={this.handleCompletedFilter} type="radio" name="complete-filter" value="All" />
+          Incomplete: <input onChange={this.handleCompletedFilter} type="radio" name="complete-filter" checked={this.props.incompleteFilter ? "checked" : ""} value="Incomplete"/>
+          Completed: <input onChange={this.handleCompletedFilter} type="radio" name="complete-filter" value="Completed"/>
+          All: <input onChange={this.handleCompletedFilter} type="radio" name="complete-filter" value="All" />
           Course:
           <select onChange={this.handleCourseChange}>
             <option value="All Courses">All Courses</option>
             {courseOptions}
           </select>
           Asc:
-          <input onClick={this.handleSortDirection} type="radio" name="sort" value="Ascending" checked={this.props.ascendingFilter ? "checked" : ""}/>
+          <input onChange={this.handleSortDirection} type="radio" name="sort" value="Ascending" checked={this.props.ascendingFilter ? "checked" : ""}/>
           Desc:
-          <input onClick={this.handleSortDirection} type="radio" name="sort" value="Descending"/>
+          <input onChange={this.handleSortDirection} type="radio" name="sort" value="Descending"/>
           Date Range:
           <DatePicker
             className="assignment-search-date-picker"

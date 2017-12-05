@@ -10,31 +10,26 @@ export default class DashboardCalendar extends Component {
   componentDidMount() {
     let calendarDOMObject = $('.rbc-calendar')
     calendarDOMObject.on("click", (event) => {
-      console.log(event.originalEvent.screenX, event.originalEvent.screenY)
       this.props.onCalendarClick(event.originalEvent.screenX, event.originalEvent.screenY)
     });
   };
 
   getEventColor = (event) => {
     const color = event.color;
-    console.log("event color:", color)
     const completedFilter = this.props.completedFilter;
-    if (this.props.courseFilter === "All Courses" || parseInt(this.props.courseFilter) === event.parentId) {
+    if (this.props.courseFilter === "All Courses" || parseInt(this.props.courseFilter, 10) === event.studentCourseId) {
       if (completedFilter === "Incomplete") {
-        console.log("event type:", event.eventType, "completed:", event.completed)
         return (event.eventType === "due date") && !event.completed ? { style: { backgroundColor: color, border: "2px solid #000000" } } : { style: { backgroundColor: color } };
       } else {
-        console.log("event type:", event.eventType, "completed:", event.completed)
         return (event.eventType === "due date") && !!event.completed ? { style: { backgroundColor: color, border: "2px solid #000000" } } : { style: { backgroundColor: color } };
-      };
+      }
 
     } else {
-
       if (completedFilter === "Incomplete") {
         return (event.eventType === "due date") && !event.completed ? { style: { backgroundColor: color, border: "2px solid #000000", opacity: 0.5 } } : { style: { backgroundColor: color, opacity: 0.5 } };
       } else {
         return (event.eventType === "due date") && !!event.completed ? { style: { backgroundColor: color, border: "2px solid #000000", opacity: 0.5 } } : { style: { backgroundColor: color, opacity: 0.5 } };
-      };
+      }
 
     }
   };
@@ -42,16 +37,20 @@ export default class DashboardCalendar extends Component {
   render() {
     BigCalendar.momentLocalizer(moment);
     const allViews = Object.keys(BigCalendar.Views).map(k => BigCalendar.Views[k])
-    const calEvents = [...this.props.calendar.courses, ...this.props.calendar.dueDates, ...this.props.calendar.toDoItems].map(date => ({
+    console.log("calendar to dos:", this.props.calendar.toDoItems)
+    const toDoItems = this.props.calendar.toDoItems.filter(todo => !todo.completed)
+    console.log("calendar to dos filtered:", toDoItems)
+    const calEvents = [...this.props.calendar.courses, ...this.props.calendar.dueDates, ...toDoItems].map(date => ({
       title: date.title,
       eventType: date.eventType,
       startDate: new Date(...date.startDate),
       endDate: new Date(...date.endDate),
       color: date.color,
-      parentId: date.parentId,
+      studentCourseId: date.studentCourseId,
+      studentAssignmentId: date.studentAssignmentId,
       completed: date.completed
     }));
-    console.log("calendar render")
+
     // ["month", "week", "work_week", "day", "agenda"]
     const defaultDate = !!this.props.defaultDate ? this.props.defaultDate : new Date("9/04/2017")
     return (
@@ -63,7 +62,6 @@ export default class DashboardCalendar extends Component {
           events={calEvents}
           startAccessor='startDate'
           endAccessor='endDate'
-          selectable={true}
           step={60}
           onSelectSlot={this.props.slotSelected}
           onSelectEvent={event => alert(event.title)}

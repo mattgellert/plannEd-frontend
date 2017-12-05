@@ -47,6 +47,13 @@ class AssignmentCard extends Component {
     const assignment = this.props.assignment;
     const selectedAssignment = this.props.selectedAssignment;
     const dueDate = new Date(assignment.dueDate);
+
+    //click completed > post >
+      //response includes completed
+      //if (to dos) open modal "delete to do(s)?" w/list
+        //yes > post, update to do events
+        //no > get, to do events
+      //else response includes completed & updated events
     return (
       <div>
         <h3>{assignment.subject} {assignment.catalogNbr} HW</h3>
@@ -133,11 +140,3 @@ function mapDispatchToProps(dispatch) {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AssignmentCard);
-
-// //for sub assignments
-// selectedForToDo={this.props.selectedForToDo} onSelectForToDo={this.props.onSelectForToDo} onCompleteParent={this.props.onCompleteParent} studentAssignments={this.props.studentAssignments} onCompleteSubAssignment={this.props.onCompleteSubAssignment} selectedAssignment={this.props.selectedAssignment} assignment={subAss.assignment} parentId={subAss.parentId} onFetchSubAssignments={this.props.onFetchSubAssignments} onDeselectSubAssignment={this.props.onDeselectSubAssignment}
-//
-//
-// //for both
-// selectedForToDo
-// onSelectForToDo={this.props.onSelectForToDo} onCompleteParent={this.props.onCompleteParent} studentAssignments={this.props.studentAssignments} onCompleteSubAssignment={this.props.onCompleteSubAssignment} selectedAssignment={this.props.selectedAssignment} assignments={this.props.studentAssignments.display} onFetchSubAssignments={this.props.onFetchSubAssignments} onCompleteAssignment={this.props.onCompleteAssignment} onSelectAssignment={this.props.onSelectAssignment} onDeselectAssignment={this.props.onDeselectAssignment} onDeselectSubAssignment={this.props.onDeselectSubAssignment}
