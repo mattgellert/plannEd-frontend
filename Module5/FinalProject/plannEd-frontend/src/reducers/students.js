@@ -122,7 +122,7 @@ export default function studentReducer(
         studentCourseIds: [],
         studentAssignments: {
           data: [],
-          completedFilter: "None",
+          completedFilter: "Incomplete",
           courseFilter: "All Courses",
           sortBy: "Due Date",
           sortDirection: "Ascending",
@@ -483,7 +483,7 @@ export default function studentReducer(
         ...state,
         studentAssignments: {
           ...state.studentAssignments,
-          completedFilter: "None",
+          completedFilter: "Incomplete",
           courseFilter: "All Courses",
           sortBy: "Due Date",
           sortDirection: "Ascending",

@@ -31,7 +31,8 @@ class AssignmentCard extends Component {
   };
 
   handleAddToDo = () => {
-    this.props.selectedForToDo === this.props.assignment.studentAssignmentId ? this.props.onDeselectForToDo() : this.props.onSelectForToDo(this.props.assignment.studentAssignmentId);
+    this.props.onDeselectForToDo()
+    this.props.selectedForToDo !== this.props.assignment.studentAssignmentId ? this.props.onSelectForToDo(this.props.assignment.studentAssignmentId) : null;
   };
 
   render() {
