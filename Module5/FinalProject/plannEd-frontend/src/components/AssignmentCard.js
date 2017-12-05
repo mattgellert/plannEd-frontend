@@ -8,7 +8,7 @@ import { hideAssignmentDetails, deselectForToDo, selectForToDo, completeParent, 
 class AssignmentCard extends Component {
 
   handleParentComplete = () => {
-    this.props.onCompleteParent(this.props.assignment.studentAssignmentId)
+    this.props.onCompleteParent(this.props.assignment.studentAssignmentId);
   };
 
   handleComplete = () => {

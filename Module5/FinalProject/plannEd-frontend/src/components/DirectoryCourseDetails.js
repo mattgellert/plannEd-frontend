@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class CourseDetails extends Component {
+class DirectoryCourseDetails extends Component {
 
   handleSelectComponent = () => {
     this.props.onSelectComponent(this.props.ssrComponent, this.props.data, this.props.section)
@@ -23,4 +23,4 @@ class CourseDetails extends Component {
   }
 };
 
-export default CourseDetails;
+export default DirectoryCourseDetails;

@@ -24,7 +24,6 @@ export default class DashboardCalendar extends Component {
         console.log("event type:", event.eventType, "completed:", event.completed)
         return (event.eventType === "due date") && !event.completed ? { style: { backgroundColor: color, border: "2px solid #000000" } } : { style: { backgroundColor: color } };
       } else {
-        // debugger
         console.log("event type:", event.eventType, "completed:", event.completed)
         return (event.eventType === "due date") && !!event.completed ? { style: { backgroundColor: color, border: "2px solid #000000" } } : { style: { backgroundColor: color } };
       };

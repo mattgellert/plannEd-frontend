@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import CourseCard from './CourseCard';
+import DirectoryCourseCard from './DirectoryCourseCard';
 
-export default class DirectoryCourses extends Component {
+export default class DirectoryCourseList extends Component {
 
   render() {
     console.log("courselist props", this.props)
     const courses = this.props.courses.map((course, idx) => (
-      <CourseCard key={idx} course={course} history={this.props.history}/>
+      <DirectoryCourseCard key={idx} course={course} history={this.props.history}/>
     ))
 
     return (

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
 import DirectorySearchForm from '../components/DirectorySearchForm';
-import DirectoryCourses from '../components/DirectoryCourses';
+import DirectoryCourseList from '../components/DirectoryCourseList';
 import { removeAddConflict } from '../actions/students';
 import NavBar from '../components/NavBar';
 
@@ -20,7 +20,7 @@ class DirectoryContainer extends Component {
         <NavBar {...this.props} activeTab="directory" />
           <div className="course-container">
             <DirectorySearchForm />
-            <DirectoryCourses history={this.props.history} courses={this.props.directoryCourses} studentCourses={this.props.studentCourses} student={this.props.student}/>
+            <DirectoryCourseList history={this.props.history} courses={this.props.directoryCourses} studentCourses={this.props.studentCourses} student={this.props.student}/>
           </div>
         </div>
       )

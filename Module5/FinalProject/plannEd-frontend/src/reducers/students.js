@@ -42,6 +42,10 @@ export default function studentReducer(
       courseColor: null,
       colorSelected: null
     },
+    selectedStudentCourse: {
+      data: null,
+      showDetails: false
+    },
     selectedForToDo: 0,
     slotSelected: false,
     selectedSlot: {
