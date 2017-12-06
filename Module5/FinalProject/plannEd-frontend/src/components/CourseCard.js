@@ -40,6 +40,12 @@ class CourseCard extends Component {
     this.props.onRemoveCourse(this.props.course.studentCourseId);
   };
 
+  // get these functions for props
+  // handleAddToDo = () => {
+  //   this.props.onDeselectForToDo()
+  //   this.props.selectedForToDo !== this.props.assignment.studentAssignmentId ? this.props.onSelectForToDo(this.props.assignment.studentAssignmentId) : null;
+  // };
+
   render() {
     const course = this.props.course;
     const selectedStudentCourse = this.props.selectedStudentCourse;
@@ -50,6 +56,7 @@ console.log("course card to remove?",course, this.props, isCourseToRemove)
         <h1>{course.subject} {course.catalogNbr}: {course.title}</h1>
         <p>{course.facilityDescr}</p>
         <p>{course.timeStart} - {course.timeEnd} ({course.pattern})</p>
+        <p onClick={this.handleAddToDo}>+ To Do</p>
         <button onClick={this.handleShowRemovePrompt}>Remove Course</button>
         {isCourseToRemove
           ?
